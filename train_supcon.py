@@ -10,26 +10,33 @@ from utils import set_seed, get_device, log_epoch, BestTracker
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("--resampling", action="store_true", help="Use group-balanced resampling")
-    p.add_argument("--no-resampling", action="store_true", help="Use uniform sampling (FairSupCon-only)")
+    p.add_argument("--balanced", action="store_true", help="Use group-balanced sampling")
+    p.add_argument("--unbalanced", action="store_true", help="Use unbalanced sampling")
+    p.add_argument("--epochs", type=int, default=cfg.NUM_EPOCHS, help=f"Number of epochs (default: {cfg.NUM_EPOCHS})")
+    p.add_argument("--lambda-con", type=float, default=cfg.LAMBDA_CON, help=f"Contrastive loss weight (default: {cfg.LAMBDA_CON})")
+    p.add_argument("--temperature", type=float, default=cfg.TEMPERATURE, help=f"SupCon temperature tau (default: {cfg.TEMPERATURE})")
     args = p.parse_args()
 
-    if args.resampling and args.no_resampling:
-        raise ValueError("Cannot specify both --resampling and --no-resampling")
+    if args.balanced and args.unbalanced:
+        raise ValueError("Cannot specify both --balanced and --unbalanced")
 
-    # Debias 默认；resample 开关：有 --resampling 则平衡采样，有 --no-resampling 则均匀采样，都没有则默认平衡采样
-    balanced = args.resampling if args.resampling else (not args.no_resampling)
+    # 默认balanced平衡采样
+    # 有 --balanced 则平衡采样，有 --unbalanced 则均匀采样
+    balanced = args.balanced if args.balanced else (not args.unbalanced)
 
     set_seed()
     device = get_device()
-    tag = "resample" if balanced else "no_resample"
-    print(f"Debias:  lambda={cfg.LAMBDA_CON}  tau={cfg.TEMPERATURE}  balanced={balanced}  warmup={cfg.WARMUP_EPOCHS}  device={device}")
+    tag = "FSC(balanced)" if balanced else "FSC(unbalanced)"
+    lambda_con = args.lambda_con
+    temperature = args.temperature
+    epochs = args.epochs
+    print(f"Fairness Sup_Con:  epochs={epochs}  lambda={lambda_con}  tau={temperature}  balanced={balanced}  warmup={cfg.WARMUP_EPOCHS}  device={device}")
 
     train_loader = get_loader("train", cfg.BATCH_SIZE, balanced=balanced)
     val_loader = get_loader("val", cfg.BATCH_SIZE)
 
     model = FairClassifier().to(device)
-    criterion = TotalLoss(lambda_con=cfg.LAMBDA_CON, temperature=cfg.TEMPERATURE)
+    criterion = TotalLoss(lambda_con=lambda_con, temperature=temperature)
 
     backbone_params = list(model.backbone.parameters())
     head_params = list(model.projector.parameters()) + list(model.classifier.parameters())
@@ -43,7 +50,7 @@ def main():
     scheduler = torch.optim.lr_scheduler.SequentialLR(optimizer, [sched_warmup, sched_cosine], milestones=[cfg.WARMUP_EPOCHS])
 
     tracker = BestTracker(tag)
-    for ep in range(cfg.NUM_EPOCHS):
+    for ep in range(epochs):
         model.train()
         total_loss, n = 0.0, 0
         for images, targets, sensitives, _ in train_loader:
@@ -58,7 +65,7 @@ def main():
         loss = total_loss / n
         scheduler.step()
         m = evaluate(model, val_loader, device)
-        log_epoch(ep, cfg.NUM_EPOCHS, loss, m)
+        log_epoch(ep, epochs, loss, m)
         tracker.update(model, m)
 
     print(f"done. {tracker.summary()}")

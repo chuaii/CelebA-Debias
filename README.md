@@ -4,32 +4,32 @@
 
 **Task:** Predict `Blond_Hair` on CelebA. **Blond_Male** is only **0.85 %** of training data, so ERM learns a shortcut: *"blond ≈ female"*.
 
-**Experiment Design:** FairSupCon + group-balanced resampling, with ablation to see what each part does. Group DRO (Sagawa et al., ICLR 2020) as other SOTA.
+**Experiment Design:** FairSupCon + group-balanced sampling, with ablation to see what each part does. Group DRO (Sagawa et al., ICLR 2020) as other SOTA.
 
 
-
-| Stage | **Method**              | **Sampling**   | **Loss**   | **What it fixes?**                 |
-| ----- | ----------------------- | -------------- | ---------- | ---------------------------------- |
-| ①     | ERM                     | Uniform        | CE         | Baseline, expose shortcut          |
-| ②     | + Resampling only       | Group-balanced | CE         | By based on data level             |
-| ③     | + FairSupCon only       | Uniform        | CE + λ·FSC | By based on representational level |
-| ④     | Resampling + FairSupCon | Group-balanced | CE + λ·FSC | Combine together                   |
-| ⑤     | vs Group DRO            | Uniform        | DRO        | Compared to other SOTA             |
+| Stage | **Method**                     | **Sampling**   | **Loss**   | **What it fixes?**                 |
+| ----- | ------------------------------ | -------------- | ---------- | ---------------------------------- |
+| ①     | ERM                            | Unbalanced     | CE         | Baseline, expose shortcut          |
+| ②     | + Balanced sampling only       | Group-balanced | CE         | By based on data level             |
+| ③     | + FairSupCon only              | Unbalanced     | CE + λ·FSC | By based on representational level |
+| ④     | Balanced sampling + FairSupCon | Group-balanced | CE + λ·FSC | Combine together                   |
+| ⑤     | vs Group DRO                   | Unbalanced     | DRO        | Compared to other SOTA             |
 
 
 This is a **2×2 ablation Matrix**：
 
-|                   | **No Resampling**   | **Resampling**     |
-| ----------------  | ------------------  | ------------------ |
-| **No FairSupCon** | ① ERM               | ② ERM + Resampling |
-| **FairSupCon**    | ③ ERM + FairSupCon  | ④ **Final Method** |
+
+|                   | Unbalanced (Random) | Group-balanced            |
+| ----------------- | ------------------- | ------------------------- |
+| **No FairSupCon** | ① ERM               | ② ERM + Balanced sampling |
+| **FairSupCon**    | ③ ERM + FairSupCon  | ④ **Final Method**        |
 
 
 This design is called **factorial ablation**.
 
 **Expected**: 
 
-*① ERM ≪ ③ FairSupCon only < ② Resampling only < ④ Combined ≈ or > ⑤ Group DRO*
+*① ERM ≪ ③ FairSupCon only < ② Balanced Sampling only < ④ Combined ≈ or > ⑤ Group DRO*
 
 ## 2. Formulation
 
@@ -83,15 +83,16 @@ $$\mathcal{L}*{\text{total}} = \mathcal{L}*{\text{CE}} + \lambda \cdot \mathcal{
 ## 3. Responsibilities
 
 
-| Member      | What they're doing                                       |
-| ----------- | -------------------------------------------------------- |
-| **Vaibhav** | Baseline ERM; Group DRO baseline                         |
-| **Huayi**   | FairSupCon loss design & implementation                  |
-| **Matthew** | Group-balanced methods                                   |
-| **??**      | Fairness evaluation (Visualize results and report)       |
+| Member      | What they're doing                                 |
+| ----------- | -------------------------------------------------- |
+| **Vaibhav** | Baseline ERM; Group DRO baseline                   |
+| **Huayi**   | FairSupCon loss design & implementation            |
+| **Matthew** | Group-balanced methods                             |
+| **??**      | Fairness evaluation (Visualize results and report) |
 
 
 ## 5. Timeline & Milestones
+
 
 | Date            | Milestone                                               |
 | --------------- | ------------------------------------------------------- |
@@ -101,23 +102,3 @@ $$\mathcal{L}*{\text{total}} = \mathcal{L}*{\text{CE}} + \lambda \cdot \mathcal{
 | **Mar 27 (Q3)** | Full comparison; fairness evaluation; final report      |
 
 
-<!-- ## 6. 训练集 / 测试集准确率高且公平性高的做法
-
-目标：训练准确率高、测试准确率高、公平性（WGA / EOD）也好。
-
-- **用对 checkpoint**  
-训练会保存多份 best：`best_<tag>_wga.pt`（最差组最好）、`best_<tag>_eod.pt`（机会公平最好）、`best_<tag>_tradeoff.pt`（WGA 与 EOD 折中）。做测试集评估时用这些，不要用最后一轮的权重；汇报时优先用 `best_*_wga.pt` 或 `best_*_tradeoff.pt`。
-- **超参建议**  
-  - `lambda_con` 在 1.0～2.0 之间通常能兼顾准确率与公平性；过大可能压准确率，过小公平性易被 CE 盖掉。  
-  - 总 epoch 按需设置；若后期出现「整体准确率↑、WGA↓、EOD↑」，可提前停训并选用已保存的 best checkpoint。
-
-**使用方式：**
-
-- 只打一行汇总（与之前一致）：
-```
-python eval.py --checkpoint <path>
-```
-- 同时看详细公平性报告：
-```
-python eval.py --checkpoint <path> --report
-``` -->

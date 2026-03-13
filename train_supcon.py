@@ -26,7 +26,7 @@ def main():
 
     set_seed()
     device = get_device()
-    tag = "FSC(balanced)" if balanced else "FSC(unbalanced)"
+    tag = "FSC_balanced_"+cfg.TARGET_ATTR+"_vs_"+cfg.SENSITIVE_ATTR if balanced else "FSC_unbalanced_"+cfg.TARGET_ATTR+"_vs_"+cfg.SENSITIVE_ATTR
     lambda_con = args.lambda_con
     temperature = args.temperature
     epochs = args.epochs
@@ -49,7 +49,7 @@ def main():
     sched_cosine = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=5, T_mult=2)
     scheduler = torch.optim.lr_scheduler.SequentialLR(optimizer, [sched_warmup, sched_cosine], milestones=[cfg.WARMUP_EPOCHS])
 
-    tracker = BestTracker(tag)
+    tracker = BestTracker(tag, warmup_epochs=cfg.WARMUP_EPOCHS)
     for ep in range(epochs):
         model.train()
         total_loss, n = 0.0, 0
@@ -66,7 +66,7 @@ def main():
         scheduler.step()
         m = evaluate(model, val_loader, device)
         log_epoch(ep, epochs, loss, m)
-        tracker.update(model, m)
+        tracker.update(model, m, ep)
 
     print(f"done. {tracker.summary()}")
 

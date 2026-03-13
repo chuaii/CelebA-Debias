@@ -30,11 +30,13 @@ def log_epoch(ep, total_epochs, loss, metrics, extra=""):
 class BestTracker:
     """同时按 WGA / EOD / EqOdd / tradeoff 维护多份 best checkpoint。
     tradeoff 规则：WGA 距最佳不超过 delta 时，选 EOD 最小的。
+    warmup 期间不保存 checkpoint。
     """
 
-    def __init__(self, tag, delta=0.005):
+    def __init__(self, tag, delta=0.005, warmup_epochs=0):
         self.tag = tag
         self.delta = delta
+        self.warmup_epochs = warmup_epochs
         self.best_wga = 0.0
         self.best_eod = float("inf")
         self.best_eqodd = float("inf")
@@ -47,8 +49,12 @@ class BestTracker:
         torch.save(model.state_dict(), path)
         return path
 
-    def update(self, model, metrics):
-        """根据 metrics dict（含 worst_group_acc / eod / eqodd）更新所有 best。"""
+    def update(self, model, metrics, epoch=0):
+        """根据 metrics dict（含 worst_group_acc / eod / eqodd）更新所有 best。
+        warmup 期间跳过保存。
+        """
+        if epoch < self.warmup_epochs:
+            return
         wga = metrics["worst_group_acc"]
         eod = metrics["eod"]
         eqodd = metrics["eqodd"]
@@ -57,20 +63,16 @@ class BestTracker:
         if wga > self.best_wga:
             self.best_wga = wga
             saved.append(self._save(model, "wga"))
-
         if eod < self.best_eod:
             self.best_eod = eod
             saved.append(self._save(model, "eod"))
-
         if eqodd < self.best_eqodd:
             self.best_eqodd = eqodd
             saved.append(self._save(model, "eqodd"))
-
         if wga >= self.best_wga - self.delta and eod < self.tradeoff_eod:
             self.tradeoff_wga = wga
             self.tradeoff_eod = eod
             saved.append(self._save(model, "tradeoff"))
-
         if saved:
             print(f"  -> saved {', '.join(os.path.basename(p) for p in saved)}")
 

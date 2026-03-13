@@ -7,19 +7,13 @@ ATTR_CSV = os.path.join(DATA_ROOT, "list_attr_celeba.csv")
 PARTITION_CSV = os.path.join(DATA_ROOT, "list_eval_partition.csv")
 
 # group = target * 2 + sensitive
-# TARGET_ATTR = "Blond_Hair"
-# SENSITIVE_ATTR = "Male"
-# GROUP_NAMES = {0: "NonBlond_Female", 1: "NonBlond_Male", 2: "Blond_Female", 3: "Blond_Male"}
-
-
-# TARGET_ATTR = "Wearing_Earrings"
-# SENSITIVE_ATTR = "Male"
-# GROUP_NAMES = {0: "NonWearing_Earrings_Female", 1: "NonWearing_Earrings_Male", 2: "Wearing_Earrings_Female", 3: "Wearing_Earrings_Male"}
-
-TARGET_ATTR = "Eyeglasses"
+TARGET_ATTR = "Blond_Hair"
 SENSITIVE_ATTR = "Male"
-GROUP_NAMES = {0: "NonEyeglasses_Female", 1: "NonEyeglasses_Male", 2: "Eyeglasses_Female", 3: "Eyeglasses_Male"}
+GROUP_NAMES = {0: "NonBlond_Female", 1: "NonBlond_Male", 2: "Blond_Female", 3: "Blond_Male"}
 
+# TARGET_ATTR = "Eyeglasses"
+# SENSITIVE_ATTR = "Male"
+# GROUP_NAMES = {0: "NonEyeglasses_Female", 1: "NonEyeglasses_Male", 2: "Eyeglasses_Female", 3: "Eyeglasses_Male"}
 
 BATCH_SIZE = 128
 NUM_WORKERS = 4

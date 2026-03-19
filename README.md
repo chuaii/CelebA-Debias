@@ -1,4 +1,4 @@
-# Fair Classification on CelebA — Q1 Action Plan
+# Fair Classification on CelebA
 
 ## 1. De-biasing Method
 

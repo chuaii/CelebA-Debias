@@ -22,7 +22,7 @@ We select high-bias pairs from a full pairwise bias analysis of all 40 CelebA at
 | Stage | **Method**                                                                           | **Sampling**   | **Loss**       | **What it fixes?**                 |
 | ----- | ------------------------------------------------------------------------------------ | -------------- | -------------- | ---------------------------------- |
 | ①     | ERM                                                                                  | Unbalanced     | CE             | Baseline, expose shortcut          |
-| ②     | + 4 group-balanced only: ( Oversampling / Undersampling / Reweighting / Focal Loss ) | Group-balanced | CE             | Data-level de-bias                 |
+| ②     | + 3 group-balanced only: ( Oversampling / Undersampling / Reweighting ) | Group-balanced | CE             | Data-level de-bias                 |
 | ③     | + FairSupCon only                                                                    | Unbalanced     | CE + λ·FSC     | Representation-level de-bias       |
 | ④     | Balanced (Oversampling / Reweighting) + FairSupCon                                   | Group-balanced | CE + λ·FSC     | Combine both levels                |
 | ⑤     | vs Group DRO                                                                         | Unbalanced     | DRO            | Compared to other SOTA             |
@@ -135,19 +135,25 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{CE}} + \lambda \cdot \mathcal{
 
 ### Group Accuracy Breakdown
 
-![Evaluation Summary](results/eval_summary.png)
+#### BlondHair × Male
+
+![BlondHair × Male group accuracy breakdown](results/fsc_eval_blondhair_male_acc.png)
+
+#### Mouth_Slightly_Open × Smiling
+
+![Mouth_Slightly_Open × Smiling group accuracy breakdown](results/fsc_eval_mouthopen_smiling_acc.png)
 
 ### Training Curves
 
 #### BlondHair × Male
 
-![BlondHair vs Male validation training dynamics](results/blondhair_male_val_training_dynamics.png)
+![BlondHair × Male validation metrics during training](results/training_val_blond_male_log.png)
 
-- Training log: `results/training_blondhair_male.csv`
+- Training log: `results/training_blond_male.csv`
 
 #### Mouth_Slightly_Open × Smiling
 
-![MouthSlightlyOpen vs Smiling validation training dynamics](results/mouthopen_smiling_val_training_dynamics.png)
+![Mouth_Slightly_Open × Smiling validation metrics during training](results/training_val_mouth_smiling_log.png)
 
-- Training log: `results/training_mouthslightlyopen_smiling.csv`
+- Training log: `results/training_mouth_smiling.csv`
 

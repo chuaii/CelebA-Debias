@@ -141,13 +141,13 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{CE}} + \lambda \cdot \mathcal{
 
 #### BlondHair × Male
 
-![BlondHair vs Male comparison](results/blond_male_comparison.png)
+![BlondHair vs Male validation training dynamics](results/blondhair_male_val_training_dynamics.png)
 
 - Training log: `results/training_blondhair_male.csv`
 
 #### Mouth_Slightly_Open × Smiling
 
-![MouthSlightlyOpen vs Smiling comparison](results/mouth_smiling_comparison.png)
+![MouthSlightlyOpen vs Smiling validation training dynamics](results/mouthopen_smiling_val_training_dynamics.png)
 
 - Training log: `results/training_mouthslightlyopen_smiling.csv`
 

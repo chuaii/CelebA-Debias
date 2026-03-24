@@ -1,14 +1,20 @@
 from __future__ import annotations
-
 from pathlib import Path
-
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-CSV_PATH = Path(__file__).parent / "training_mouthslightlyopen_smiling.csv"
-OUT_PATH = Path(__file__).parent / "mouth_smiling_comparison.png"
+"""
+绘制Mouth Slightly Open × Smiling的训练曲线。
+用法：
+  cd D:\Code\DeepLearning\CelebA\results
+  python plot_mouth_smiling.py
+"""
+
+
+CSV_PATH = Path(__file__).parent / "training_mouth_smiling.csv"
+OUT_PATH = Path(__file__).parent / "training_val_mouth_smiling_log.png"
 
 METHODS = ["Baseline (ERM)", "FSC (Unbalanced)", "FSC (Oversampling)", "FSC (Reweighting)"]
 COLORS = {
@@ -25,6 +31,23 @@ GROUP_COLS = [
     "acc_MouthOpen_Smiling",
 ]
 GROUP_LABELS = ["MO- / S-", "MO- / S+", "MO+ / S-", "MO+ / S+"]
+
+
+def method_xtick_label(label: str) -> str:
+    s = str(label).strip()
+    if not s.startswith("FSC"):
+        return s
+    return s + "\n" + r"$\mathbf{Ours}$"
+
+
+def method_xtick_labels(labels) -> list[str]:
+    return [method_xtick_label(x) for x in labels]
+
+
+def style_method_xticklabels(ax: plt.Axes) -> None:
+    for lbl in ax.get_xticklabels():
+        lbl.set_multialignment("center")
+        lbl.set_ha("center")
 
 
 def load(csv_path: Path) -> pd.DataFrame:
@@ -135,7 +158,8 @@ def plot_final_bars(ax: plt.Axes, df: pd.DataFrame) -> None:
                 f"{bar.get_height():.1f}", ha="center", va="bottom", fontsize=7.5)
 
     ax.set_xticks(x)
-    ax.set_xticklabels(METHODS, rotation=12, ha="right", fontsize=8.5)
+    ax.set_xticklabels(method_xtick_labels(METHODS), rotation=12, fontsize=10)
+    style_method_xticklabels(ax)
     ax.set_ylabel("Accuracy (%)")
     ax.set_ylim(78, 100)
     ax.set_title("(c) Final Accuracy Comparison\n(epoch 10)", fontsize=10, fontweight="bold")

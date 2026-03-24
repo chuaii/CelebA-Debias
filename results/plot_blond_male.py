@@ -1,14 +1,20 @@
 from __future__ import annotations
 
 from pathlib import Path
-
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-CSV_PATH = Path(__file__).parent / "training_blondhair_male.csv"
-OUT_PATH = Path(__file__).parent / "blond_male_comparison.png"
+"""
+绘制Blond Hair × Male的训练曲线。
+用法：
+  cd D:\Code\DeepLearning\CelebA\results
+  python plot_blond_male.py
+"""
+
+CSV_PATH = Path(__file__).parent / "training_blond_male.csv"
+OUT_PATH = Path(__file__).parent / "training_val_blond_male_log.png"
 
 METHODS = ["Baseline (ERM)", "FSC (Unbalanced)", "FSC (Oversampling)", "FSC (Reweighting)"]
 COLORS = {
@@ -25,6 +31,23 @@ GROUP_COLS = [
     "acc_Blond_Male",
 ]
 GROUP_LABELS = ["NB / F", "NB / M", "B / F", "B / M"]
+
+
+def method_xtick_label(label: str) -> str:
+    s = str(label).strip()
+    if not s.startswith("FSC"):
+        return s
+    return s + "\n" + r"$\mathbf{Ours}$"
+
+
+def method_xtick_labels(labels) -> list[str]:
+    return [method_xtick_label(x) for x in labels]
+
+
+def style_method_xticklabels(ax: plt.Axes) -> None:
+    for lbl in ax.get_xticklabels():
+        lbl.set_multialignment("center")
+        lbl.set_ha("center")
 
 
 def load(csv_path: Path) -> pd.DataFrame:
@@ -128,7 +151,8 @@ def plot_final_bars(ax: plt.Axes, df: pd.DataFrame) -> None:
                 f"{bar.get_height():.1f}", ha="center", va="bottom", fontsize=7.5)
 
     ax.set_xticks(x)
-    ax.set_xticklabels(METHODS, rotation=12, ha="right", fontsize=8.5)
+    ax.set_xticklabels(method_xtick_labels(METHODS), rotation=12, fontsize=8.5)
+    style_method_xticklabels(ax)
     ax.set_ylabel("Accuracy (%)")
     ax.set_ylim(20, 105)
     ax.set_title("(c) Final Accuracy Comparison\n(epoch 10)", fontsize=10, fontweight="bold")

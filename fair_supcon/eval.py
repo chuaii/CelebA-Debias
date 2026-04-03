@@ -11,7 +11,7 @@ from collections import defaultdict
 import torch
 import config as cfg
 from dataset import get_loader
-from fair_supcon import FairClassifier
+from model import FairClassifier
 
 # ---------- 公平性指标 ----------
 

@@ -7,13 +7,12 @@ import torch
 import config as cfg
 from dataset import get_loader
 from eval import collect_predictions, compute_metrics_from_predictions
-from fair_supcon import FairClassifier
+from model import FairClassifier
 from utils import get_device, set_seed
 
 """
 Evaluate the fairness of the checkpoints.
-  You can use the following command to evaluate the fairness of the checkpoints:
-  cd D:\Code\DeepLearning\CelebA
+  cd path/to/CelebA/fair_supcon
   python bootstrap_eval.py
 """
 

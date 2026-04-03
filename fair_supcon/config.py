@@ -1,6 +1,6 @@
 import os
 
-ROOT = os.path.dirname(__file__)
+ROOT = os.path.dirname(os.path.dirname(__file__))
 DATA_ROOT = os.path.join(ROOT, "datasets")
 IMG_DIR = os.path.join(DATA_ROOT, "img_align_celeba")
 ATTR_CSV = os.path.join(DATA_ROOT, "list_attr_celeba.csv")

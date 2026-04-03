@@ -15,5 +15,6 @@
 
 /venv
 .claude
+.cursor
 CLAUDE.md
 __pycache__

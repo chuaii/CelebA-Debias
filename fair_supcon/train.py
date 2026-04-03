@@ -5,7 +5,8 @@ from collections import Counter
 import torch
 import config as cfg
 from dataset import get_loader
-from fair_supcon import FairClassifier, TotalLoss
+from model import FairClassifier
+from loss import TotalLoss
 from eval import evaluate
 from utils import set_seed, get_device, log_epoch, BestTracker
 

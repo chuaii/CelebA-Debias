@@ -106,10 +106,10 @@ flowchart TB
 **Loss for i=1:**
 
 $$
-\text{term}_1 = -\frac{1}{2}\sum_{j \in \{3,4\}} \log \frac{\exp(\mathbf{z}_1 \cdot \mathbf{z}_j / \tau)}{\sum_{k \in \{3,4,5,6,7,8\}} \exp(\mathbf{z}_1 \cdot \mathbf{z}_k / \tau)}
+\text{term}_1 = -\frac{1}{2}\sum_{j \in \lbrace 3,4 \rbrace} \log \frac{\exp(\mathbf{z}_1 \cdot \mathbf{z}_j / \tau)}{\sum_{k \in \lbrace 3,4,5,6,7,8 \rbrace} \exp(\mathbf{z}_1 \cdot \mathbf{z}_k / \tau)}
 $$
 
-Numerator: similarity with cross-group positives (Blond-Male). Denominator: all of $\mathcal{D}(1)=\{3,4,5,6,7,8\}$. Minimizing this loss maximizes the relative similarity with fair positives.
+Numerator: similarity with cross-group positives (Blond-Male). Denominator: all of $\mathcal{D}(1)=\lbrace 3,4,5,6,7,8 \rbrace$. Minimizing this loss maximizes the relative similarity with fair positives.
 
 ## SupCon vs FairSupCon (Ours)
 

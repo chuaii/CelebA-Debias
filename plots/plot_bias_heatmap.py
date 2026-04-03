@@ -8,7 +8,7 @@ Experimental Attribute Bias Heatmap
   - 每格标注：DPD 值 + 最小组样本数
 
 用法：
-  cd D:/Code/DeepLearning/CelebA/bias_analysis
+  cd D:/Code/DeepLearning/CelebA/plots
   python plot_bias_heatmap.py
 """
 
@@ -26,7 +26,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).parent
 ROOT = SCRIPT_DIR.parent
 ATTR_CSV = ROOT / "datasets/list_attr_celeba.csv"
-OUT_DIR = ROOT / "bias_analysis"
+OUT_DIR = ROOT / "figures"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # ─── 实验候选属性（可自由增删）─────────────────────────────────────────────────

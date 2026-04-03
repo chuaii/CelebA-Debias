@@ -11,7 +11,7 @@ from eval import evaluate
 from utils import set_seed, get_device, log_epoch, BestTracker
 
 _GN = cfg.GROUP_NAMES  # {0: "...", 1: "...", 2: "...", 3: "..."}
-# Short stems for default CSV names under training/ (see training/*.csv)
+# Short stems for default CSV names under outputs/ (see outputs/*.csv)
 _TRAINING_CSV_STEM = {
     ("Blond_Hair", "Male"): "blond_male",
     ("Mouth_Slightly_Open", "Smiling"): "mouth_smiling",
@@ -32,7 +32,7 @@ def default_training_csv_path() -> str:
         t = cfg.TARGET_ATTR.replace("_", "").lower()
         s = cfg.SENSITIVE_ATTR.replace("_", "").lower()
         stem = f"{t}_{s}"
-    return os.path.join(cfg.ROOT, "training", f"training_{stem}.csv")
+    return os.path.join(cfg.ROOT, "outputs", f"training_{stem}.csv")
 
 
 def append_csv(path, row):

@@ -1,4 +1,4 @@
-method,¦Ë,group_balance,epoch,train_loss,overall_acc,wga,worst_group,eqodd,acc_MouthNonOpen_NonSmiling,acc_MouthNonOpen_Smiling,acc_MouthOpen_NonSmiling,acc_MouthOpen_Smiling
+method,Î»,group_balance,epoch,train_loss,overall_acc,wga,worst_group,eqodd,acc_MouthNonOpen_NonSmiling,acc_MouthNonOpen_Smiling,acc_MouthOpen_NonSmiling,acc_MouthOpen_Smiling
 ERM,0,none,1,0.9047,0.5174,0.0061,MouthOpen_Smiling,0.0041,0.9919,0.996,0.0067,0.0061
 ERM,0,none,2,0.5025,0.8913,0.5793,MouthOpen_NonSmiling,0.369,0.9329,0.8672,0.5793,0.9483
 ERM,0,none,3,0.2478,0.9183,0.7242,MouthOpen_NonSmiling,0.242,0.9357,0.8932,0.7242,0.9662

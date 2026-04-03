@@ -1,8 +1,6 @@
 from __future__ import annotations
-
 import argparse
 from pathlib import Path
-
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -11,15 +9,15 @@ from matplotlib.patches import FancyArrowPatch
 """
 from bootstrap_ci_summary.csv to build the figure.
 You can use the following command to build the figure:
-  cd D:\Code\DeepLearning\CelebA\outputs
+  cd D:\Code\DeepLearning\CelebA\plots
   python plot_bootstrap_ci.py
 You can also use the following command to build the figure for a specific task:
   python plot_bootstrap_ci.py --task MouthOpen_Smiling
   python plot_bootstrap_ci.py --task BlondHair_Male
 """
 
-CSV_PATH = Path(__file__).parent / "bootstrap_ci_summary.csv"
-OUT_DIR = Path(__file__).parent
+CSV_PATH = Path(__file__).resolve().parent.parent / "outputs" / "bootstrap_ci_summary.csv"
+OUT_DIR = Path(__file__).resolve().parent.parent / "figures"
 
 METHOD_ORDER = [
     "Baseline (ERM)",

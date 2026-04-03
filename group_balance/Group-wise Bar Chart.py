@@ -11,6 +11,7 @@ Original file is located at
 # 1. Colab 環境設定與 Kaggle 資料下載
 # ==========================================
 import os
+from pathlib import Path
 from google.colab import drive
 import kagglehub
 
@@ -258,7 +259,7 @@ plt.ylabel('Overall Accuracy (Performance ➔)', fontsize=14)
 plt.axvspan(0.85, 1.0, ymin=0.85, ymax=1.0, color='green', alpha=0.1, label='Ideal Zone')
 plt.legend(loc='lower right')
 plt.tight_layout()
-plt.savefig('Plot1_Pareto_Tradeoff.png', dpi=300)
+plt.savefig(str(Path(__file__).resolve().parent.parent / 'figures' / 'Plot1_Pareto_Tradeoff.png'), dpi=300)
 plt.show()
 
 # ---------------------------------------------------------
@@ -284,7 +285,7 @@ plt.axhline(y=df_results.loc[df_results['Method']=='Baseline', 'Blonde Male'].va
             color='r', linestyle='--', alpha=0.6, label='Baseline Worst Group')
 plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
 plt.tight_layout()
-plt.savefig('Plot2_Group_Accuracy.png', dpi=300)
+plt.savefig(str(Path(__file__).resolve().parent.parent / 'figures' / 'Plot2_Group_Accuracy.png'), dpi=300)
 plt.show()
 
 # ---------------------------------------------------------
@@ -314,5 +315,5 @@ plt.xlim(0, 1.05)
 plt.legend(loc='lower right')
 plt.grid(axis='y', linestyle='--', alpha=0.5)
 plt.tight_layout()
-plt.savefig('Plot3_Accuracy_Gap.png', dpi=300)
+plt.savefig(str(Path(__file__).resolve().parent.parent / 'figures' / 'Plot3_Accuracy_Gap.png'), dpi=300)
 plt.show()

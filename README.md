@@ -159,11 +159,11 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{CE}} + \lambda \cdot \mathcal{
 
 ![BlondHair × Male validation metrics during training](training/training_log_val_blond_male.png)
 
-- Training log: `training/training_blond_male.csv`
+- Training log: `outputs/training_blond_male.csv`
 
 #### Mouth_Slightly_Open × Smiling
 
 ![Mouth_Slightly_Open × Smiling validation metrics during training](training/training_log_val_mouth_smiling.png)
 
-- Training log: `training/training_mouth_smiling.csv`
+- Training log: `outputs/training_mouth_smiling.csv`
 

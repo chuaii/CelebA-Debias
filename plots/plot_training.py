@@ -11,13 +11,15 @@ import pandas as pd
 """
 Plot training curves for bias & de-biasing comparison.
 Usage:
-  cd D:\Code\DeepLearning\CelebA\training
+  cd D:\Code\DeepLearning\CelebA\plots
   python plot_training.py                       # all tasks
   python plot_training.py --task blond_male     # single task
   python plot_training.py --task mouth_smiling
 """
 
-SCRIPT_DIR = Path(__file__).parent
+ROOT = Path(__file__).resolve().parent.parent
+DATA_DIR = ROOT / "outputs"
+OUTPUT_DIR = ROOT / "figures"
 
 METHODS = ["Baseline (ERM)", "FSC (Unbalanced)", "FSC (Oversampling)", "FSC (Reweighting)"]
 COLORS = {
@@ -212,8 +214,8 @@ def plot_eqodd_curves(ax: plt.Axes, df: pd.DataFrame) -> None:
 
 def plot_task(task_name: str) -> Path:
     cfg = TASK_CONFIGS[task_name]
-    csv_path = SCRIPT_DIR / cfg["csv"]
-    out_path = SCRIPT_DIR / cfg["out"]
+    csv_path = DATA_DIR / cfg["csv"]
+    out_path = OUTPUT_DIR / cfg["out"]
 
     df = load(csv_path)
 

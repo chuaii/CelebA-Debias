@@ -22,7 +22,7 @@ eval_transform = transforms.Compose([
 
 
 class CelebAFairness(Dataset):
-    """返回 (image, target, sensitive, group)。"""
+    """Returns (image, target, sensitive, group)."""
 
     def __init__(self, split="train", transform=None):
         attr = pd.read_csv(cfg.ATTR_CSV)
@@ -51,7 +51,7 @@ class CelebAFairness(Dataset):
 
 
 def _group_balanced_sampler(dataset):
-    """每个样本的采样权重 = 1/该组样本数，使各组在期望上被均匀采到。"""
+    """Weight each sample by 1/group_count for balanced sampling."""
     cnt = Counter(dataset.groups)
     weights = [1.0 / cnt[g] for g in dataset.groups]
     return WeightedRandomSampler(weights, num_samples=len(dataset), replacement=True)

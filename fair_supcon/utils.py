@@ -28,7 +28,7 @@ def log_epoch(ep, total_epochs, loss, metrics, extra=""):
 
 
 class BestTracker:
-    """按 WGA / EqOdd 维护 best checkpoint。warmup 期间不保存。"""
+    """Track best checkpoint by WGA / EqOdd. Skips saving during warmup."""
 
     def __init__(self, tag, warmup_epochs=0):
         self.tag = tag
@@ -43,9 +43,7 @@ class BestTracker:
         return path
 
     def update(self, model, metrics, epoch=0):
-        """根据 metrics dict（含 worst_group_acc / eqodd）更新 best。
-        warmup 期间跳过保存。
-        """
+        """Update best checkpoint if metrics improve. Skips during warmup."""
         if epoch < self.warmup_epochs:
             return
         wga = metrics["worst_group_acc"]

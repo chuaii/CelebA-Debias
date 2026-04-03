@@ -1,8 +1,7 @@
 """
-评估脚本：整体准确率、分组准确率、公平性指标（WGA / EqOdd）。
+Evaluation: overall accuracy, group accuracy, fairness metrics (WGA / EqOdd).
 
-公平性指标说明：
-  - Equalized Odds Difference  (EqOdd) = max(|ΔTPR|, |ΔFPR|)
+  - Equalized Odds Difference (EqOdd) = max(|ΔTPR|, |ΔFPR|)
   - Per-sensitive-group accuracy / TPR / FPR
 """
 
@@ -13,13 +12,10 @@ import config as cfg
 from dataset import get_loader
 from model import FairClassifier
 
-# ---------- 公平性指标 ----------
+# ---------- fairness metrics ----------
 
 def compute_fairness(preds, targets, sensitives):
-    """
-    对二值敏感属性计算公平性指标。
-    返回包含 per-group 统计与差距指标的 dict。
-    """
+    """Compute fairness metrics for binary sensitive attribute."""
     groups = sorted(sensitives.unique().tolist())
     assert len(groups) == 2, f"Expected binary sensitive attr, got {groups}"
     g0, g1 = groups
@@ -54,7 +50,7 @@ def compute_fairness(preds, targets, sensitives):
 
 
 def print_fairness_report(metrics):
-    """打印详细公平性报告。"""
+    """Print detailed fairness report."""
     gs = metrics["group_stats"]
     sensitive_names = {0: f"Non{cfg.SENSITIVE_ATTR}", 1: cfg.SENSITIVE_ATTR}
 
@@ -80,7 +76,7 @@ def print_fairness_report(metrics):
 
 @torch.no_grad()
 def collect_predictions(model, loader, device):
-    """返回 (preds, targets, sensitives) 用于公平性计算。"""
+    """Return (preds, targets, sensitives) for fairness evaluation."""
     all_preds, all_targets, all_sensitives = [], [], []
     model.eval()
     for images, targets, sensitives, _ in loader:
@@ -92,10 +88,10 @@ def collect_predictions(model, loader, device):
     return torch.cat(all_preds), torch.cat(all_targets), torch.cat(all_sensitives)
 
 
-# ---------- 主评估逻辑 ----------
+# ---------- main evaluation ----------
 
 def compute_metrics_from_predictions(preds, targets, sensitives, groups=None):
-    """根据预测结果直接计算整体/分组准确率与公平性指标。"""
+    """Compute overall/group accuracy and fairness metrics from predictions."""
     if groups is None:
         groups = targets * 2 + sensitives
 
@@ -124,17 +120,17 @@ def compute_metrics_from_predictions(preds, targets, sensitives, groups=None):
 
 @torch.no_grad()
 def evaluate(model, loader, device):
-    """返回 group accuracy 指标 + 公平性指标（WGA / EqOdd）。"""
+    """Return group accuracy + fairness metrics (WGA / EqOdd)."""
     preds, targets, sensitives = collect_predictions(model, loader, device)
     return compute_metrics_from_predictions(preds, targets, sensitives)
 
 
 def main():
-    p = argparse.ArgumentParser(description="评估模型：准确率与公平性指标")
-    p.add_argument("--checkpoint", required=True, help="模型 checkpoint 路径")
+    p = argparse.ArgumentParser(description="Evaluate model: accuracy and fairness metrics")
+    p.add_argument("--checkpoint", required=True, help="checkpoint path")
     p.add_argument("--split", default="test", choices=["val", "test"])
     p.add_argument("--bs", type=int, default=cfg.BATCH_SIZE)
-    p.add_argument("--report", action="store_true", help="打印详细公平性报告")
+    p.add_argument("--report", action="store_true", help="print detailed fairness report")
     args = p.parse_args()
 
     device = torch.device(cfg.DEVICE if torch.cuda.is_available() else "cpu")

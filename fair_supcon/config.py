@@ -7,25 +7,19 @@ ATTR_CSV = os.path.join(DATA_ROOT, "list_attr_celeba.csv")
 PARTITION_CSV = os.path.join(DATA_ROOT, "list_eval_partition.csv")
 
 # group = target * 2 + sensitive
-# TARGET_ATTR = "Blond_Hair"
-# SENSITIVE_ATTR = "Male"
-# GROUP_NAMES = {0: "NonBlond_Female", 1: "NonBlond_Male", 2: "Blond_Female", 3: "Blond_Male"}
+TARGET_ATTR = "Blond_Hair"
+SENSITIVE_ATTR = "Male"
+GROUP_NAMES = {0: "NonBlond_Female", 1: "NonBlond_Male", 2: "Blond_Female", 3: "Blond_Male"}
 
 # Mouth_Slightly_Open × Smiling 
-TARGET_ATTR = "Mouth_Slightly_Open"
-SENSITIVE_ATTR = "Smiling"
-GROUP_NAMES = {0: "MouthClosed_NonSmiling", 1: "MouthClosed_Smiling", 2: "MouthOpen_NonSmiling", 3: "MouthOpen_Smiling"}
-
-# Smiling / High_Cheekbones
-# TARGET_ATTR = "Smiling"
-# SENSITIVE_ATTR = "High_Cheekbones"
-# GROUP_NAMES = {0: "NonSmiling_HighCheekbones", 1: "NonSmiling_LowCheekbones", 2: "Smiling_HighCheekbones", 3: "Smiling_LowCheekbones"}
-
+# TARGET_ATTR = "Mouth_Slightly_Open"
+# SENSITIVE_ATTR = "Smiling"
+# GROUP_NAMES = {0: "MouthClosed_NonSmiling", 1: "MouthClosed_Smiling", 2: "MouthOpen_NonSmiling", 3: "MouthOpen_Smiling"}
 
 BATCH_SIZE = 128
 NUM_WORKERS = 4
 NUM_EPOCHS = 10
-WARMUP_EPOCHS = 1  # 前 N 个 epoch 线性 warmup，0 表示不做 warmup
+WARMUP_EPOCHS = 1  # linear warmup for first N epochs, 0 to disable
 LR = 1e-5
 LR_BACKBONE = 1e-6
 WD = 1e-4

@@ -14,7 +14,7 @@ We select high-bias pairs from a full pairwise bias analysis of all 40 CelebA at
 
 > DPD = \|P(T=1\|S=1) − P(T=1\|S=0)\|, WMR = min(group) / max(group).
 
-![Bias Heatmap (DPD + min group)](bias_analysis/bias_heatmap.png)
+![Bias Heatmap (DPD + min group)](figures/bias_heatmap.png)
 
 **Experiment Design:** FairSupCon + group-balanced sampling, with ablation to see what each part does. Group DRO (Sagawa et al., ICLR 2020) as other SOTA.
 
@@ -137,33 +137,33 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{CE}} + \lambda \cdot \mathcal{
 
 #### BlondHair × Male
 
-![BlondHair × Male — per-group accuracy with bootstrap 95% CI](outputs/bootstrap_blondhair_male_acc.png)
+![BlondHair × Male — per-group accuracy with bootstrap 95% CI](figures/bootstrap_blondhair_male_acc.png)
 
 #### Mouth_Slightly_Open × Smiling
 
-![Mouth × Smiling — per-group accuracy with bootstrap 95% CI](outputs/bootstrap_mouthopen_smiling_acc.png)
+![Mouth × Smiling — per-group accuracy with bootstrap 95% CI](figures/bootstrap_mouthopen_smiling_acc.png)
 
 ### Bootstrap CI gap (Task 0 & Task 3)
 
 #### Task 0 — Blond Hair × Male
 
-![Task 0 Blond — bootstrap CI gap vs baseline](outputs/Plot_CI_Gap_Task_0_%28Blond%29.png)
+![Task 0 Blond — bootstrap CI gap vs baseline](figures/Plot_CI_Gap_Task_0_%28Blond%29.png)
 
 #### Task 3 — Mouth_Slightly_Open × Smiling
 
-![Task 3 Mouth Open — bootstrap CI gap vs baseline](outputs/Plot_CI_Gap_Task_3_%28Mouth_Open%29.png)
+![Task 3 Mouth Open — bootstrap CI gap vs baseline](figures/Plot_CI_Gap_Task_3_%28Mouth_Open%29.png)
 
 ### Training Curves
 
 #### BlondHair × Male
 
-![BlondHair × Male validation metrics during training](training/training_log_val_blond_male.png)
+![BlondHair × Male validation metrics during training](figures/training_log_val_blond_male.png)
 
 - Training log: `outputs/training_blond_male.csv`
 
 #### Mouth_Slightly_Open × Smiling
 
-![Mouth_Slightly_Open × Smiling validation metrics during training](training/training_log_val_mouth_smiling.png)
+![Mouth_Slightly_Open × Smiling validation metrics during training](figures/training_log_val_mouth_smiling.png)
 
 - Training log: `outputs/training_mouth_smiling.csv`
 

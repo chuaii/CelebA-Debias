@@ -10,13 +10,7 @@ from loss import TotalLoss
 from eval import evaluate
 from utils import set_seed, get_device, log_epoch, BestTracker
 
-_GN = cfg.GROUP_NAMES  # {0: "...", 1: "...", 2: "...", 3: "..."}
-# Short stems for default CSV names under outputs/ (see outputs/*.csv)
-_TRAINING_CSV_STEM = {
-    ("Blond_Hair", "Male"): "blond_male",
-    ("Mouth_Slightly_Open", "Smiling"): "mouth_smiling",
-    ("Smiling", "High_Cheekbones"): "smiling_highcheekbones",
-}
+_GN = cfg.GROUP_NAMES
 
 CSV_FIELDS = [
     "method", "λ", "group_balance", "epoch",
@@ -26,13 +20,9 @@ CSV_FIELDS = [
 
 
 def default_training_csv_path() -> str:
-    key = (cfg.TARGET_ATTR, cfg.SENSITIVE_ATTR)
-    stem = _TRAINING_CSV_STEM.get(key)
-    if stem is None:
-        t = cfg.TARGET_ATTR.replace("_", "").lower()
-        s = cfg.SENSITIVE_ATTR.replace("_", "").lower()
-        stem = f"{t}_{s}"
-    return os.path.join(cfg.ROOT, "outputs", f"training_{stem}.csv")
+    t = cfg.TARGET_ATTR.replace("_", "").lower()
+    s = cfg.SENSITIVE_ATTR.replace("_", "").lower()
+    return os.path.join(cfg.ROOT, "outputs", f"training_{t}_{s}.csv")
 
 
 def append_csv(path, row):
@@ -49,15 +39,15 @@ def main():
     p.add_argument("--epochs", type=int, default=cfg.NUM_EPOCHS)
     p.add_argument("--lr", type=float, default=cfg.LR)
     p.add_argument("--bs", type=int, default=cfg.BATCH_SIZE)
-    p.add_argument("--lambda-con", type=float, default=0.0, help="对比损失权重，0 = baseline (ERM only)")
+    p.add_argument("--lambda-con", type=float, default=0.0, help="contrastive loss weight, 0 = baseline (ERM only)")
     p.add_argument("--temperature", type=float, default=cfg.TEMPERATURE)
     p.add_argument("--group-balance", choices=["none", "oversampling", "reweighting"], default="none")
     p.add_argument("--csv", type=str, default=None, help="CSV path to append per-epoch metrics")
     args = p.parse_args()
 
     if args.csv is None:
-        os.makedirs(os.path.join(cfg.ROOT, "training"), exist_ok=True)
         args.csv = default_training_csv_path()
+        os.makedirs(os.path.dirname(args.csv), exist_ok=True)
 
     set_seed()
     device = get_device()

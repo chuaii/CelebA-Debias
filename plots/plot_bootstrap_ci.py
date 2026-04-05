@@ -251,6 +251,21 @@ def plot_task(df: pd.DataFrame, task: str) -> Path:
         error_kw=error_style,
     )
 
+    # Annotate overall accuracy on top of each overall bar
+    for i, (val, err_low, err_high) in enumerate(
+        zip(overall_mean, overall_err[0], overall_err[1])
+    ):
+        ax.text(
+            x[i] - 2 * width,
+            val + err_high + 0.012,
+            f"{100 * val:.1f}%",
+            ha="center",
+            va="bottom",
+            fontsize=8.5,
+            fontweight="bold",
+            color=BAR_COLORS["overall"],
+        )
+
     group_centers = np.array([x - width, x, x + width, x + 2 * width], dtype=float)
     for method_idx in range(len(task_df)):
         add_gap_annotation(ax, group_centers[:, method_idx], group_means, group_errors, method_idx)

@@ -47,7 +47,7 @@ def main():
 
     if args.csv is None:
         args.csv = default_training_csv_path()
-        os.makedirs(os.path.dirname(args.csv), exist_ok=True)
+    os.makedirs(os.path.dirname(args.csv), exist_ok=True)
 
     set_seed()
     device = get_device()
@@ -108,7 +108,7 @@ def main():
         tracker.update(model, m, ep)
 
         if args.csv:
-            append_csv(args.csv, {
+            row = {
                 "method": method,
                 "λ": lambda_con,
                 "group_balance": group_balance,
@@ -119,7 +119,8 @@ def main():
                 "worst_group": _GN[m["worst_group_id"]],
                 "eqodd": f"{m['eqodd']:.4f}",
                 **{f"acc_{_GN[g]}": f"{m['group_acc'][g]:.4f}" for g in range(4)},
-            })
+            }
+            append_csv(args.csv, row)
 
     print(f"done. {tracker.summary()}")
 

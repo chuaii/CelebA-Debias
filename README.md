@@ -47,44 +47,9 @@ This design is called **factorial ablation**.
 
 ## 2. Formulation
 
-### 2.1 Background — SupCon
-
-SupCon (Khosla et al., NeurIPS 2020) uses labels to pick positive pairs. For anchor $i$, any sample with the same label is a positive:
-
-$$\mathcal{P}_{\text{SupCon}}(i) = \left\lbrace i \neq j \mid y_i = y_j \right\rbrace$$
-
-$$\mathcal{L}_{\text{SupCon}} = -\frac{1}{|\mathcal{B}|}\sum_{i \in \mathcal{B}} \frac{1}{|\mathcal{P}_{\text{SupCon}}(i)|} \sum_{j \in \mathcal{P}_{\text{SupCon}}(i)} \log \frac{\exp(\text{sim}(i,j) / \tau)}{\sum_{k \neq i} \exp(\text{sim}(i,k) / \tau)}$$
-
-where $\text{sim}(i,j) = \mathbf{z}_i \cdot \mathbf{z}_j$ (cosine similarity, L2-normalized). Same-class pulled closer, different-class pushed apart.
-
-**Problem:** SupCon treats all same-label pairs equally. If most *Mouth\_Slightly\_Open* samples are also *Smiling*, it clusters by smiling expression, not mouth position.
-
-### 2.2 FairSupCon Loss
-
-We only pair samples with **same label but different sensitive attribute**:
-
-$$\mathcal{P}_{\text{Fair}}(i) = \left\lbrace i \neq j \mid y_i = y_j \wedge s_i \neq s_j \right\rbrace$$
-
-e.g. MouthOpen\_NonSmiling ( $y=1, s=0$ ) only pairs with MouthOpen\_Smiling ( $y=1, s=1$ ), never another MouthOpen\_NonSmiling. This forces the encoder to learn mouth-position features instead of smiling expression.
-
-But if we keep the standard denominator, same-class same-attribute samples get pushed apart, which breaks clustering. So we fix the denominator too.
-
-Negative set — everything with a different label:
-
-$$\mathcal{N}(i) = \left\lbrace k \mid y_k \neq y_i \right\rbrace$$
-
-Denominator set — union of cross-attribute positives and negatives:
-
-$$\mathcal{D}(i) = \mathcal{P}_{\text{Fair}}(i) \cup \mathcal{N}(i)$$
-
-Same-label same-attribute samples ( $y_k = y_i \wedge s_k = s_i$ ) are left out of $\mathcal{D}(i)$ — not pulled, not pushed, they just cluster on their own.
-
-$$\mathcal{L}_{\text{FSC}} = - \frac{1}{|\mathcal{B}|} \sum_{i \in \mathcal{B}} \frac{1}{|\mathcal{P}_{\text{Fair}}(i)|} \sum_{j \in \mathcal{P}_{\text{Fair}}(i)} \log \frac{\exp(\mathbf{z}_i \cdot \mathbf{z}_j / \tau)}{\sum_{k \in \mathcal{D}(i)} \exp(\mathbf{z}_i \cdot \mathbf{z}_k / \tau)}$$
-
-### 2.3 Total Loss & Hyperparameters
+**Core idea:** Standard SupCon pulls all same-label samples together, which reinforces shortcuts when a sensitive attribute co-occurs with the target. FairSupCon fixes this by **only pairing samples with the same label but different sensitive attribute**, forcing the encoder to learn task-relevant features instead of shortcuts.
 
 $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{CE}} + \lambda \cdot \mathcal{L}_{\text{FSC}}$$
-
 
 | Symbol    | What it is                 | Value                |
 | --------- | -------------------------- | -------------------- |
@@ -92,6 +57,8 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{CE}} + \lambda \cdot \mathcal{
 | $\tau$    | Temperature                | 0.07                 |
 | $d$       | Projection head output dim | 128                  |
 | $B$       | Batch size                 | 128                  |
+
+> Full derivation, formulas, and a worked batch example: [fair_supcon/README.md](fair_supcon/README.md)
 
 
 ## 3. Responsibilities
@@ -166,4 +133,18 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{CE}} + \lambda \cdot \mathcal{
 ![Mouth_Slightly_Open × Smiling validation metrics during training](figures/training_log_val_mouth_smiling.png)
 
 - Training log: `outputs/training_mouth_smiling.csv`
+
+## 6. Dataset
+
+This project uses the **CelebA** (CelebFaces Attributes) dataset:
+
+> Ziwei Liu, Ping Luo, Xiaogang Wang, and Xiaoou Tang. "Deep Learning Face Attributes in the Wild." *Proceedings of the International Conference on Computer Vision (ICCV)*, 2015.
+
+- 202,599 face images, each annotated with 40 binary attributes
+- Official site: [mmlab.ie.cuhk.edu.hk/projects/CelebA.html](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html)
+- Download: [CelebA on Kaggle](https://www.kaggle.com/datasets/jessicali9530/celeba-dataset)
+
+## 7. Code
+
+Source code: [github.com/chuaii/CelebA-Debias](https://github.com/chuaii/CelebA-Debias)
 

@@ -37,8 +37,9 @@ class BestTracker:
         self.best_eqodd = float("inf")
 
     def _save(self, model, suffix):
-        os.makedirs(cfg.CKPT_DIR, exist_ok=True)
-        path = os.path.join(cfg.CKPT_DIR, f"best_{self.tag}_{suffix}.pt")
+        subdir = os.path.join(cfg.CKPT_DIR, suffix)
+        os.makedirs(subdir, exist_ok=True)
+        path = os.path.join(subdir, f"best_{self.tag}.pt")
         torch.save(model.state_dict(), path)
         return path
 

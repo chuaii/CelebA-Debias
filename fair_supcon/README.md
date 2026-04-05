@@ -120,4 +120,47 @@ Numerator: similarity with cross-group positives (Blond-Male). Denominator: all 
 | Denominator    | All except self      | All except self **and same-group**   |
 | Risk           | Clusters by shortcut | Clusters by task-relevant features   |
 
+## Usage
 
+All commands run from `fair_supcon/`:
+
+```bash
+cd fair_supcon
+```
+
+### Train
+
+```bash
+# ERM baseline
+python train.py --lambda-con 0.0
+
+# FairSupCon (unbalanced)
+python train.py --lambda-con 1.5
+
+# FairSupCon + oversampling
+python train.py --lambda-con 1.5 --group-balance oversampling
+
+# FairSupCon + reweighting
+python train.py --lambda-con 1.5 --group-balance reweighting
+```
+
+Optional flags: `--epochs 10`, `--lr 1e-5`, `--bs 128`, `--temperature 0.07`, `--csv path/to/log.csv`
+
+### Evaluate
+
+```bash
+python eval.py --checkpoint ../checkpoints/best_model.pt
+
+# with detailed fairness report
+python eval.py --checkpoint ../checkpoints/best_model.pt --report
+```
+
+Optional flags: `--split val|test`, `--bs 128`
+
+### Bootstrap CI
+
+```bash
+python bootstrap_eval.py
+```
+
+Task and checkpoint configs are defined inside the script. Results are saved to `outputs/bootstrap_ci_summary.csv`.

@@ -210,28 +210,6 @@ All numbers have bootstrap 95% CI (1000 resamples x 5 seeds).
 | Blond x Male    | 38.89% -> 86.67%     | 0.50 -> 0.09    | ~5%              |
 | Mouth x Smiling | 78.45% -> 87.22%     | 0.19 -> 0.10    | <1%              |
 
-#### Blond_Hair x Male
-
-
-| Method             | Overall Acc          | WGA                      | EqOdd                    |
-| ------------------ | -------------------- | ------------------------ | ------------------------ |
-| Baseline (ERM)     | 95.39 [95.10, 95.68] | 38.89 [32.00, 46.24]     | 0.502 [0.428, 0.572]     |
-| FSC (Unbalanced)   | 95.32 [95.04, 95.62] | 41.11 [34.16, 48.42]     | 0.468 [0.393, 0.540]     |
-| FSC (Oversampling) | 91.76 [91.36, 92.14] | 85.56 [80.22, 90.34]     | 0.094 [0.043, 0.148]     |
-| FSC (Reweighting)  | 90.69 [90.29, 91.09] | **86.67** [81.54, 89.94] | **0.085** [0.036, 0.138] |
-
-
-#### Mouth_Slightly_Open x Smiling
-
-
-| Method             | Overall Acc          | WGA                      | EqOdd                    |
-| ------------------ | -------------------- | ------------------------ | ------------------------ |
-| Baseline (ERM)     | 93.15 [92.80, 93.50] | 78.45 [76.76, 80.08]     | 0.193 [0.177, 0.211]     |
-| FSC (Unbalanced)   | 92.96 [92.61, 93.32] | 80.01 [78.39, 81.61]     | 0.177 [0.160, 0.193]     |
-| FSC (Oversampling) | 92.55 [92.20, 92.91] | **87.22** [85.84, 88.53] | **0.099** [0.085, 0.113] |
-| FSC (Reweighting)  | 92.46 [92.09, 92.82] | 87.04 [85.65, 88.35]     | 0.105 [0.092, 0.119]     |
-
-
 ### Per-Group Breakdown
 
 #### Blond_Hair x Male
@@ -245,8 +223,6 @@ All numbers have bootstrap 95% CI (1000 resamples x 5 seeds).
 | FSC (Reweighting)  | 89.72      | 90.56      | 95.20   | **86.67** |
 
 
-Blond_Male: 38.89% -> 86.67%. The baseline nearly fails on blond males entirely; our method fixes that.
-
 #### Mouth_Slightly_Open x Smiling
 
 
@@ -257,8 +233,6 @@ Blond_Male: 38.89% -> 86.67%. The baseline nearly fails on blond males entirely;
 | FSC (Oversampling) | 89.61           | 92.55        | **87.22**     | 97.09      |
 | FSC (Reweighting)  | 89.27           | 91.53        | **87.04**     | 97.55      |
 
-
-Open_NonSmiling (mouth open but not smiling) is the hard group: 78.45% -> 87.22%.
 
 ### Analysis: Why FairSupCon Alone Is Not Enough
 

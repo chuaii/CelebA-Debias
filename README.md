@@ -328,6 +328,7 @@ FairSupCon **fails** on this pair:
 ## 6. Reproducibility
 
 Code: **[github.com/chuaii/CelebA-Debias](https://github.com/chuaii/CelebA-Debias)**
+
 Link to dataset: **(https://www.kaggle.com/datasets/jessicali9530/celeba-dataset)**
 
 ```bash

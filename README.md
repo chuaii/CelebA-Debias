@@ -182,7 +182,7 @@ FairSupCon + group-balanced sampling, with ablation for each component. Group DR
 | ②     | + 3 group-balanced only: ( Oversampling / Undersampling / Reweighting ) | Group-balanced | CE         | Data-level de-bias           |
 | ③     | + FairSupCon only                                                       | Unbalanced     | CE + λ·FSC | Representation-level de-bias |
 | ④     | Balanced (Oversampling / Reweighting) + FairSupCon                      | Group-balanced | CE + λ·FSC | Combine both levels          |
-| ⑤     | vs Group DRO                                                            | Unbalanced     | DRO        | Compared to other SOTA       |
+
 
 
 This is a **2×2 ablation matrix**：

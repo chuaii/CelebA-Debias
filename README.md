@@ -79,6 +79,8 @@ $$\mathcal{L}_{reweight} = \frac{1}{N} \sum_{i=1}^{N} w_{g_i} \cdot \mathcal{L}_
 Formally:
 
 - Fair positive set: $\mathcal{P}_{\text{Fair}}(i) = \lbrace j : j \neq i,\ y_j = y_i,\ s_j \neq s_i \rbrace$
+
+
 - Denominator: $\mathcal{D}(i) = \mathcal{P}_{\text{Fair}}(i) \cup \mathcal{N}(i)$, where $\mathcal{N}(i) = \lbrace k : y_k \neq y_i \rbrace$ (same-group samples excluded)
 - FairSupCon loss:
 
@@ -100,6 +102,7 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{CE}} + \lambda \cdot \mathcal{
 
 | Sample        | 1      | 2      | 3     | 4     | 5         | 6         | 7         | 8         |
 | ------------- | ------ | ------ | ----- | ----- | --------- | --------- | --------- | --------- |
+| (visual)      | 👱🏻‍♀️    | 👱🏻‍♀️     | 👱🏻    | 👱🏻   |   👩🏻‍🦱     |   👩🏻‍🦱      |   👨🏻‍🦱     |👨🏻‍🦱      |
 | Label $y$     | Blond  | Blond  | Blond | Blond | Not-Blond | Not-Blond | Not-Blond | Not-Blond |
 | Sensitive $s$ | Female | Female | Male  | Male  | Female    | Female    | Male      | Male      |
 
@@ -110,39 +113,49 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{CE}} + \lambda \cdot \mathcal{
 flowchart TB
     subgraph batch["Batch Samples"]
         direction LR
-        subgraph g4["NotBlond-Male"]
+        subgraph g4["NotBlond-Male👨🏻‍🦱"]
             i7["7"]
             i8["8"]
         end
-        subgraph g3["NotBlond-Female"]
+        subgraph g3["NotBlond-Female👩🏻‍🦱"]
             i5["5"]
             i6["6"]
         end
-        subgraph g2["Blond-Male"]
+        subgraph g2["Blond-Male👱🏻"]
             i3["3"]
             i4["4"]
         end
-        subgraph g1["Blond-Female"]
+        subgraph g1["Blond-Female👱🏻‍♀️"]
             i1["1 (anchor)"]
             i2["2"]
         end
     end
 
-    i1 -->|"same y=1"| SameY["Samples 2, 3, 4"]
-    SameY -->|"diff s"| PF["P_Fair(1) = {3, 4} Pull close"]
-    SameY -->|"same s"| IGN["Sample 2 Ignored"]
+    i1 -->|"same y=1 (👱🏻&👱🏻‍♀️)"| SameY["Samples 2, 3, 4 "]
+    SameY -->|"diff s 👱🏻"| PF["P_Fair(1) = {3, 4} Pull close"]
+    SameY -->|"same s 👱🏻‍♀️"| IGN["Sample 2 Ignored"]
 
-    i1 -->|"diff y"| N["N(1) = {5, 6, 7, 8} Push away"]
+    i1 -->|"diff y (👨🏻‍🦱&👩🏻‍🦱)"| N["N(1) = {5, 6, 7, 8}  Push away"]
 
-    i1 -.->|"self"| SELF["Excluded"]
+    i1 -.->|"self 👱🏻‍♀️"| SELF["Excluded"]
+
+    classDef anchor fill:#fef08a,stroke:#ca8a04,stroke-width:4px,color:#1c1917
+    classDef pfair fill:#22c55e,stroke:#15803d,stroke-width:2px,color:#fff
+    classDef ignored fill:#9ca3af,stroke:#6b7280,stroke-width:2px,color:#fff
+    classDef neg fill:#ef4444,stroke:#b91c1c,stroke-width:2px,color:#fff
+
+    class i1 anchor
+    class i3,i4,PF pfair
+    class i2,IGN ignored
+    class i5,i6,i7,i8,N neg
 ```
 
 
-|                             | Action     | Samples           | Why                     |
-| --------------------------- | ---------- | ----------------- | ----------------------- |
-| $\mathcal{P}_{\text{Fair}}$ | Pull close | {3, 4} Blond-Male | Same label, diff gender |
-| $\mathcal{N}$               | Push away  | {5, 6, 7, 8}      | Different label         |
-| Ignored                     | Neither    | {2} Blond-Female  | Same label, same gender |
+|                             | Action     | Samples             | Why                     |
+| --------------------------- | ---------- | ------------------- | ----------------------- |
+| $\mathcal{P}_{\text{Fair}}$ | Pull close | {3, 4} Blond-Male👱🏻 | Same label, diff gender |
+| $\mathcal{N}$               | Push away  | {5, 6, 7, 8} (👨🏻‍🦱&👩🏻‍🦱)| Different label         |
+| Ignored                     | Neither    | {2} Blond-Female 👱🏻‍♀️ | Same label, same gender |
 
 
 **Loss for i=1:**

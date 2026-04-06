@@ -141,10 +141,20 @@ ResNet-18 (pretrained) with two heads: a projection head (512 -> 128, for contra
 
 ### Group-Balanced Sampling
 
-Data-level fixes:
+To mitigate the model's reliance on spurious correlations from the data perspective, we implemented three distinct group-balanced strategies. Let $\mathcal{G}$ be the four intersectional groups, and $N_g$ be the sample size of group $g$.
 
-- **Oversampling:** upsample minority groups
-- **Reweighting:** weight CE loss by inverse group frequency
+**1. Group-Balanced Oversampling (Data-level)**
+We adjust the sampling probability $p_i$ of each instance to be inversely proportional to its group size, ensuring a 1:1:1:1 expected ratio in every batch:
+$$p_i = \frac{1}{4 N_{g_i}}$$
+
+**2. Group-Balanced Undersampling (Data-level)**
+We identify the smallest group size $N_{min} = \min_{g \in \mathcal{G}} N_g$, and uniformly downsample the majority groups without replacement until all groups equal $N_{min}$. This creates a perfectly balanced but reduced dataset.
+
+**3. Group-Reweighting (Loss-level)**
+Instead of altering the data distribution, we apply a normalized inverse-frequency weight $w_g$ to the Cross-Entropy Loss of each sample, heavily penalizing misclassifications on minority groups:
+$$w_g = \frac{1/N_g}{\frac{1}{4} \sum_{k \in \mathcal{G}} 1/N_k}$$
+
+$$\mathcal{L}_{reweight} = \frac{1}{N} \sum_{i=1}^{N} w_{g_i} \cdot \mathcal{L}_{\text{CE}}(f(x_i), y_i)$$
 
 ### Experiment Design
 

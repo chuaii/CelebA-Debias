@@ -56,6 +56,7 @@ Let $\mathcal{G}$ be the four intersectional groups and $N_g$ the count of group
 **Undersampling:** downsample all groups to $N_{min} = \min_{g} N_g$, producing a balanced but smaller dataset.
 
 **Reweighting:** apply per-sample loss weights based on inverse group frequency:
+
 $$w_g = \frac{1/N_g}{\frac{1}{4}\sum_{k \in \mathcal{G}} 1/N_k}, \qquad \mathcal{L}_{\text{rw}} = \frac{1}{N}\sum_{i} w_{g_i} \cdot \mathcal{L}_{\text{CE}}(f(x_i), y_i)$$
 
 ### FairSupCon
